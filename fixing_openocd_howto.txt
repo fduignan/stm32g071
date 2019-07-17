@@ -1,0 +1,32 @@
+Build procedure:
+download and extract : http://openocd.zylin.com/gitweb?p=openocd.git;a=snapshot;h=dcec354bfc756c4a4e1034c9461b5d3f4e55a63e;sf=tgz
+go in to this directory
+git clone http://openocd.zylin.com/jimtcl
+Open file src/flash/nor/stm32g0x.c and starting at line 929 you will see the following code:
+COMMAND_HANDLER(stm32x_handle_options_read_command)
+{
+	struct target *target = NULL;
+	//struct stm32g0x_flash_bank *stm32x_info = NULL;                      // <------ COMMENT OUT THIS LINE
+
+	if (CMD_ARGC < 1)
+		return ERROR_COMMAND_SYNTAX_ERROR;
+
+	struct flash_bank *bank;
+	int retval = CALL_COMMAND_HANDLER(flash_command_get_bank, 0, &bank);
+	if (ERROR_OK != retval)
+		return retval;
+
+	//stm32x_info = bank->driver_priv;                                     // <------ COMMENT OUT THIS LINE
+
+	target = bank->target;
+
+	if (target->state != TARGET_HALTED) {
+		LOG_ERROR("Target not halted");
+		return ERROR_TARGET_NOT_HALTED;
+	}
+    etc. 
+
+run ./bootstrap
+run ./configure --enable-stlink --enable-maintainer-mode --disable-internal-libjaylink
+make
+sudo make install
