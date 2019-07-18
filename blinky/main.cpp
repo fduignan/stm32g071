@@ -8,9 +8,7 @@ void delay(uint32_t dly)
 }
 int main()
 {
-    int i;
-    RCC->IOPENR |= (1 << 0); // enable Port A
-    
+    RCC->IOPENR |= (1 << 0); // enable Port A    
     GPIOA->MODER &= ~(1 << 1); // Make bit 0 an output
     GPIOA->MODER |= (1 << 0);
     while(1)
